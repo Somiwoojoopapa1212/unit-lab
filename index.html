@@ -33,7 +33,9 @@
     /* ─── HOME ─── */
     #s-home{padding:18px 18px 48px;gap:12px;justify-content:flex-start;}
     .home-top{text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:4px;}
-    .home-robot{font-size:70px;animation:float 3s ease-in-out infinite;line-height:1.1;}
+    .home-robot{width:120px;height:120px;border-radius:24px;display:block;
+      animation:float 3s ease-in-out infinite;object-fit:cover;
+      filter:drop-shadow(0 0 18px rgba(6,182,212,.4));}
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
     .home-title{font-size:21px;color:var(--yellow);text-shadow:0 0 16px rgba(251,191,36,.5);}
     .home-sub{font-size:13px;color:var(--muted);}
@@ -86,7 +88,7 @@
     .q-emoji{font-size:92px;line-height:1.1;}
     .q-text{font-size:17px;line-height:1.65;}
 
-    .choices{display:flex;gap:10px;width:100%;max-width:344px;padding:0 2px;flex-shrink:0;}
+    .choices{display:flex;gap:10px;width:100%;max-width:344px;padding:0 2px;flex-shrink:0;margin-bottom:10px;}
     .choice-btn{flex:1;background:var(--card);border:2.5px solid var(--border);
       border-radius:20px;padding:14px 6px;font-size:22px;font-family:'Jua',sans-serif;
       color:var(--text);cursor:pointer;min-height:68px;display:flex;align-items:center;
@@ -140,7 +142,7 @@
       .q-emoji{font-size:68px;}
       .q-text{font-size:15px;}
       .choice-btn{min-height:56px;font-size:19px;}
-      .home-robot{font-size:52px;}
+      .home-robot{width:88px;height:88px;}
     }
   </style>
 </head>
@@ -150,7 +152,7 @@
 <!-- ══ HOME ══ -->
 <div class="screen active" id="s-home">
   <div class="home-top">
-    <span class="home-robot">🤖</span>
+    <img class="home-robot" src="icons/icon-512.png" alt="우주봇"/>
     <div class="home-title">우주봇 단위 연구소</div>
     <div class="home-sub">물건에 알맞은 단위를 골라봐요! ✨</div>
   </div>
