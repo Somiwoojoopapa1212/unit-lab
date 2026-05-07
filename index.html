@@ -63,6 +63,18 @@
     .p-units{font-size:11px;color:var(--muted);text-align:center;line-height:1.55;}
     .p-best{font-size:11px;color:var(--yellow);min-height:15px;}
 
+    /* 변환 카드 */
+    .convert-card{display:flex;align-items:center;gap:14px;width:100%;max-width:360px;
+      background:linear-gradient(135deg,rgba(244,114,182,.14),rgba(167,139,250,.14));
+      border:2px solid rgba(244,114,182,.38);border-radius:22px;padding:16px 18px;
+      cursor:pointer;transition:transform .15s,box-shadow .15s;}
+    .convert-card:active{transform:scale(.97);}
+    .convert-icon{font-size:44px;flex-shrink:0;}
+    .convert-info{flex:1;}
+    .convert-title{font-size:17px;color:#f472b6;font-weight:700;}
+    .convert-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
+    .convert-arrow{font-size:20px;color:#f472b6;flex-shrink:0;}
+
     /* ─── GAME ─── */
     #s-game{padding:0;justify-content:flex-start;overflow:hidden;}
     .game-hd{display:flex;align-items:center;justify-content:space-between;width:100%;
@@ -189,6 +201,16 @@
       <div class="p-best" id="best-time"></div>
     </div>
   </div>
+
+  <!-- 변환 행성 -->
+  <div class="convert-card" onclick="startCat('convert')">
+    <div class="convert-icon">🔄</div>
+    <div class="convert-info">
+      <div class="convert-title">단위 변환 행성</div>
+      <div class="convert-sub">1 km = ? m · 1 kg = ? g<br>단위 사이 숫자 관계를 알아봐요!</div>
+    </div>
+    <div class="convert-arrow">▶</div>
+  </div>
 </div>
 
 <!-- ══ GAME ══ -->
@@ -242,10 +264,11 @@
 <script>
 /* ════ 데이터 ════ */
 const CATS = {
-  length:{name:'📏 길이 행성', color:'var(--cl)', fill:'rgba(6,182,212,.65)'},
-  weight:{name:'⚖️ 무게 행성', color:'var(--cw)', fill:'rgba(249,115,22,.65)'},
-  volume:{name:'💧 용량 행성', color:'var(--cv)', fill:'rgba(96,165,250,.65)'},
-  time:  {name:'⏰ 시간 행성', color:'var(--ct)', fill:'rgba(167,139,250,.65)'},
+  length: {name:'📏 길이 행성',  color:'var(--cl)', fill:'rgba(6,182,212,.65)'},
+  weight: {name:'⚖️ 무게 행성',  color:'var(--cw)', fill:'rgba(249,115,22,.65)'},
+  volume: {name:'💧 용량 행성',  color:'var(--cv)', fill:'rgba(96,165,250,.65)'},
+  time:   {name:'⏰ 시간 행성',  color:'var(--ct)', fill:'rgba(167,139,250,.65)'},
+  convert:{name:'🔄 단위 변환 행성', color:'#f472b6', fill:'rgba(244,114,182,.65)'},
 };
 
 const QS = {
@@ -323,6 +346,78 @@ const QS = {
   ],
 };
 
+  convert:[
+    /* ── 길이 변환 ── */
+    {e:'📏',q:'1 cm = ? mm',c:['10','100','1000'],a:'10',
+     ok:'맞았어요! 1 cm는 10 mm예요. cm보다 mm가 더 작아요!',ng:'조금 아쉬워요! 1 cm는 10 mm랍니다.'},
+    {e:'📏',q:'1 m = ? cm',c:['100','10','1000'],a:'100',
+     ok:'맞았어요! 1 m는 100 cm예요.',ng:'조금 아쉬워요! 1 m는 100 cm랍니다.'},
+    {e:'📏',q:'1 km = ? m',c:['1000','100','10000'],a:'1000',
+     ok:'맞았어요! 1 km는 1000 m예요.',ng:'조금 아쉬워요! 1 km는 1000 m랍니다.'},
+    {e:'📏',q:'10 mm = ? cm',c:['1','10','100'],a:'1',
+     ok:'맞았어요! 10 mm는 1 cm예요.',ng:'조금 아쉬워요! 10 mm는 1 cm랍니다.'},
+    {e:'📏',q:'100 cm = ? m',c:['1','10','100'],a:'1',
+     ok:'맞았어요! 100 cm는 1 m예요.',ng:'조금 아쉬워요! 100 cm는 1 m랍니다.'},
+    {e:'📏',q:'1000 m = ? km',c:['1','10','100'],a:'1',
+     ok:'맞았어요! 1000 m는 1 km예요.',ng:'조금 아쉬워요! 1000 m는 1 km랍니다.'},
+    {e:'📏',q:'2 m = ? cm',c:['200','20','2000'],a:'200',
+     ok:'맞았어요! 2 m는 200 cm예요.',ng:'조금 아쉬워요! 2 m는 200 cm랍니다.'},
+    {e:'📏',q:'5 cm = ? mm',c:['50','5','500'],a:'50',
+     ok:'맞았어요! 5 cm는 50 mm예요.',ng:'조금 아쉬워요! 5 cm는 50 mm랍니다.'},
+    /* ── 무게 변환 ── */
+    {e:'⚖️',q:'1 g = ? mg',c:['1000','100','10'],a:'1000',
+     ok:'맞았어요! 1 g는 1000 mg예요.',ng:'조금 아쉬워요! 1 g는 1000 mg랍니다.'},
+    {e:'⚖️',q:'1 kg = ? g',c:['1000','100','10'],a:'1000',
+     ok:'맞았어요! 1 kg는 1000 g예요.',ng:'조금 아쉬워요! 1 kg는 1000 g랍니다.'},
+    {e:'⚖️',q:'1000 mg = ? g',c:['1','10','100'],a:'1',
+     ok:'맞았어요! 1000 mg는 1 g예요.',ng:'조금 아쉬워요! 1000 mg는 1 g랍니다.'},
+    {e:'⚖️',q:'1000 g = ? kg',c:['1','10','100'],a:'1',
+     ok:'맞았어요! 1000 g는 1 kg예요.',ng:'조금 아쉬워요! 1000 g는 1 kg랍니다.'},
+    {e:'⚖️',q:'2 kg = ? g',c:['2000','200','20'],a:'2000',
+     ok:'맞았어요! 2 kg는 2000 g예요.',ng:'조금 아쉬워요! 2 kg는 2000 g랍니다.'},
+    {e:'⚖️',q:'3 g = ? mg',c:['3000','300','30'],a:'3000',
+     ok:'맞았어요! 3 g는 3000 mg예요.',ng:'조금 아쉬워요! 3 g는 3000 mg랍니다.'},
+    {e:'⚖️',q:'5 kg = ? g',c:['5000','500','50'],a:'5000',
+     ok:'맞았어요! 5 kg는 5000 g예요.',ng:'조금 아쉬워요! 5 kg는 5000 g랍니다.'},
+    {e:'⚖️',q:'2000 g = ? kg',c:['2','20','200'],a:'2',
+     ok:'맞았어요! 2000 g는 2 kg예요.',ng:'조금 아쉬워요! 2000 g는 2 kg랍니다.'},
+    /* ── 용량 변환 ── */
+    {e:'💧',q:'1 L = ? ml',c:['1000','100','10'],a:'1000',
+     ok:'맞았어요! 1 L는 1000 ml예요.',ng:'조금 아쉬워요! 1 L는 1000 ml랍니다.'},
+    {e:'💧',q:'1000 ml = ? L',c:['1','10','100'],a:'1',
+     ok:'맞았어요! 1000 ml는 1 L예요.',ng:'조금 아쉬워요! 1000 ml는 1 L랍니다.'},
+    {e:'💧',q:'2 L = ? ml',c:['2000','200','20'],a:'2000',
+     ok:'맞았어요! 2 L는 2000 ml예요.',ng:'조금 아쉬워요! 2 L는 2000 ml랍니다.'},
+    {e:'💧',q:'3 L = ? ml',c:['3000','300','30'],a:'3000',
+     ok:'맞았어요! 3 L는 3000 ml예요.',ng:'조금 아쉬워요! 3 L는 3000 ml랍니다.'},
+    {e:'💧',q:'5 L = ? ml',c:['5000','500','50'],a:'5000',
+     ok:'맞았어요! 5 L는 5000 ml예요.',ng:'조금 아쉬워요! 5 L는 5000 ml랍니다.'},
+    {e:'💧',q:'2000 ml = ? L',c:['2','20','200'],a:'2',
+     ok:'맞았어요! 2000 ml는 2 L예요.',ng:'조금 아쉬워요! 2000 ml는 2 L랍니다.'},
+    {e:'💧',q:'3000 ml = ? L',c:['3','30','300'],a:'3',
+     ok:'맞았어요! 3000 ml는 3 L예요.',ng:'조금 아쉬워요! 3000 ml는 3 L랍니다.'},
+    {e:'💧',q:'4 L = ? ml',c:['4000','400','40'],a:'4000',
+     ok:'맞았어요! 4 L는 4000 ml예요.',ng:'조금 아쉬워요! 4 L는 4000 ml랍니다.'},
+    /* ── 시간 변환 ── */
+    {e:'⏰',q:'1 분 = ? 초',c:['60','6','600'],a:'60',
+     ok:'맞았어요! 1 분은 60 초예요.',ng:'조금 아쉬워요! 1 분은 60 초랍니다.'},
+    {e:'⏰',q:'1 시간 = ? 분',c:['60','6','600'],a:'60',
+     ok:'맞았어요! 1 시간은 60 분이에요.',ng:'조금 아쉬워요! 1 시간은 60 분이랍니다.'},
+    {e:'⏰',q:'60 초 = ? 분',c:['1','10','6'],a:'1',
+     ok:'맞았어요! 60 초는 1 분이에요.',ng:'조금 아쉬워요! 60 초는 1 분이랍니다.'},
+    {e:'⏰',q:'60 분 = ? 시간',c:['1','10','6'],a:'1',
+     ok:'맞았어요! 60 분은 1 시간이에요.',ng:'조금 아쉬워요! 60 분은 1 시간이랍니다.'},
+    {e:'⏰',q:'2 분 = ? 초',c:['120','12','1200'],a:'120',
+     ok:'맞았어요! 2 분은 120 초예요.',ng:'조금 아쉬워요! 2 분은 120 초랍니다.'},
+    {e:'⏰',q:'3 분 = ? 초',c:['180','18','1800'],a:'180',
+     ok:'맞았어요! 3 분은 180 초예요.',ng:'조금 아쉬워요! 3 분은 180 초랍니다.'},
+    {e:'⏰',q:'2 시간 = ? 분',c:['120','12','1200'],a:'120',
+     ok:'맞았어요! 2 시간은 120 분이에요.',ng:'조금 아쉬워요! 2 시간은 120 분이랍니다.'},
+    {e:'⏰',q:'5 분 = ? 초',c:['300','30','3000'],a:'300',
+     ok:'맞았어요! 5 분은 300 초예요.',ng:'조금 아쉬워요! 5 분은 300 초랍니다.'},
+  ],
+};
+
 const BKEY = c => `unit_best_${c}`;
 
 /* ════ 상태 ════ */
@@ -331,11 +426,11 @@ let cat='length', qs=[], qi=0, score=0, stars=0, firstTry=true, answered=false;
 /* ════ 홈 ════ */
 function renderHome(){
   let tot=0;
-  ['length','weight','volume','time'].forEach(c=>{
+  ['length','weight','volume','time','convert'].forEach(c=>{
     const b=parseInt(localStorage.getItem(BKEY(c))||'0');
     tot+=b;
     const el=document.getElementById(`best-${c}`);
-    el.textContent=b?`최고 ⭐ ${b}개`:'';
+    if(el) el.textContent=b?`최고 ⭐ ${b}개`:'';
   });
   document.getElementById('total-stars').textContent=tot;
 }
