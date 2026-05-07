@@ -1,4 +1,4 @@
-const CACHE_NAME = 'unit-lab-20260507000000';
+const CACHE_NAME = 'unit-lab-20260507053335';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
